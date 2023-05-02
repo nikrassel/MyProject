@@ -7,6 +7,7 @@ import SupportInfo from "./components/ui/supportInfo"
 import Catalog from "./components/page/catalog"
 import NotFound from "./components/page/not-found"
 import UserBasket from "./components/page/userBasket"
+import CheckOut from "./components/page/checkOut"
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/catalog/:category?/:good?" Component={Catalog} />
                 <Route path="/login/:type?" Component={Login} />
                 <Route path="/basket" Component={UserBasket} />
+                <Route path="/checkout" Component={CheckOut} />
                 <Route path="*" Component={NotFound} />
             </Routes>
             <SupportInfo />

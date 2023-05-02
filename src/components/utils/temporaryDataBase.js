@@ -95,7 +95,24 @@ export const arrayOfGoods = [
     }
 ]
 
-export const basket = {
-    goods: ["001", "002", "008"],
-    goodsQuantity: { "001": 3, "002": 1, "008": 5 }
-}
+export const basket = [
+    {
+        goodId: "001",
+        goodQuantity: 3,
+        chosen: false
+    },
+    {
+        goodId: "002",
+        goodQuantity: 1,
+        chosen: false
+    },
+    {
+        goodId: "008",
+        goodQuantity: 5,
+        chosen: false
+    }
+]
+// export const basket = {
+//     goods: ["001", "002", "008"],
+//     goodsQuantity: { "001": 3, "002": 1, "008": 5 }
+// }
