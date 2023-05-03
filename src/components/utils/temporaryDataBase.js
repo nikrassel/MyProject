@@ -112,7 +112,24 @@ export const basket = [
         chosen: false
     }
 ]
-// export const basket = {
-//     goods: ["001", "002", "008"],
-//     goodsQuantity: { "001": 3, "002": 1, "008": 5 }
-// }
+
+export const orders = [
+    {
+        goodsIds: ["001", "007", "009"],
+        goodQuantity: { "001": 3, "007": 5, "009": 5 },
+        payMethod: "Картой онлайн",
+        delivery: "Самовывоз",
+        date: Date.now() - 2 * 86400000,
+        status: "Готов к выдаче",
+        orderNumber: "R001"
+    },
+    {
+        goodsIds: ["001", "005", "006"],
+        goodsQuantity: { "001": 3, "005": 10, "006": 10 },
+        payMethod: "СБП",
+        delivery: "Самовывоз",
+        date: Date.now(),
+        status: "Комплектуется",
+        orderNumber: "R002"
+    }
+]

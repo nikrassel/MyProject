@@ -21,7 +21,7 @@ const CategoryLayout = ({ currentCategory }) => {
     return (
         <>
             <FiltersAppendix value={Number(maxPrice)} onChange={handleChange} />
-            <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3 text-center">
+            <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3">
                 {filtredLayout.map((item) => (
                     <div className="col" key={item.id}>
                         <div className="card mb-4" style={{ width: "18rem" }}>
@@ -40,7 +40,7 @@ const CategoryLayout = ({ currentCategory }) => {
                                 <p className="card-text">
                                     {item.shortDescription}
                                 </p>
-                                <a href="#" className="btn btn-warning">
+                                <a href="" className="btn btn-warning">
                                     Купить
                                 </a>
                             </div>

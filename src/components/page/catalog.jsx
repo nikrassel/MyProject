@@ -19,14 +19,14 @@ const Catalog = () => {
             <LowerNavBar />
             {currentCategory ? (
                 good ? (
-                    <>
+                    <div className="mb-4 offset-md-3">
                         <GoodLayout />
-                    </>
+                    </div>
                 ) : (
-                    <>
+                    <div className="mb-4 offset-md-3">
                         <h1>Страница {category}</h1>
                         <CategoryLayout currentCategory={currentCategory} />
-                    </>
+                    </div>
                 )
             ) : (
                 <>

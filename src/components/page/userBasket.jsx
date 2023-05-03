@@ -4,11 +4,13 @@ import { arrayOfGoods, basket } from "../utils/temporaryDataBase"
 import { getGoodImage, getGoodName, getGoodPrice } from "../utils/goodInBasket"
 import MiddleNavBar from "../ui/middleNavBar"
 import LowerNavBar from "../ui/lowerNavBar"
+import { useNavigate } from "react-router-dom"
 
 const UserBasket = () => {
     const [currentBasket, setCurrentBasket] = useState(basket)
     const [totalCost, setTotalCost] = useState(0)
     const [allMark, setAllMark] = useState(false)
+    const navigate = useNavigate()
     useEffect(() => {
         totalCostCalculating(currentBasket)
     }, [])
@@ -74,8 +76,9 @@ const UserBasket = () => {
         })
         setCurrentBasket(temp)
     }
-    function showInfo() {
+    function handleGoToCheckout() {
         console.log(currentBasket)
+        navigate("/checkout")
     }
     return (
         <>
@@ -107,7 +110,7 @@ const UserBasket = () => {
                         <div>
                             <button
                                 className="btn btn-warning"
-                                onClick={showInfo}
+                                onClick={handleGoToCheckout}
                             >
                                 Оформление
                             </button>
