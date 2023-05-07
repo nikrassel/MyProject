@@ -67,7 +67,9 @@ export const getGoodById = (goodId) => (state) => {
 }
 export const getGoodWithSearch = (goodName) => (state) => {
     if (state.goods.entities) {
-        return state.goods.entities.filter((elem) => elem.name.toLowerCase().includes(goodName.toLowerCase()))
+        return state.goods.entities.filter((elem) =>
+            elem.name.toLowerCase().includes(goodName.toLowerCase())
+        )
     }
     return null
 }

@@ -10,21 +10,26 @@ const UserBasket = () => {
     const userBasket = useSelector(getBasket())
     const arrayOfGoods = useSelector(getGoods())
     if (userBasket && arrayOfGoods) {
-        const changedBasket = []
-        for (const good of userBasket) {
-            const nextGood = {
-                ...good
-            }
-            changedBasket.push(nextGood)
-        }
+        // const changedBasket = []
+        // for (const good of userBasket) {
+        //     const nextGood = {
+        //         ...good
+        //     }
+        //     changedBasket.push(nextGood)
+        // }
         return (
             <>
                 <MiddleNavBar />
                 <LowerNavBar />
-                <BasketLayout
-                    userBasket={changedBasket}
-                    arrayOfGoods={arrayOfGoods}
-                />
+                {userBasket.goods
+                    ? (
+                        <BasketLayout
+                            userBasket={userBasket}
+                            arrayOfGoods={arrayOfGoods}
+                        />
+                    )
+                    : (<h2>В вашей корзине ничего нет</h2>)
+                }
             </>
         )
     }

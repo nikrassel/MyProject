@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom"
 import TextField from "../common/form/textField"
 import CheckBoxField from "../common/form/checkBoxField"
 import { validator } from "../../utils/validator"
+import { login } from "../../store/user"
+import { useDispatch } from "react-redux"
 
 const LoginForm = () => {
     const [data, setData] = useState({ email: "", password: "", stayOn: false })
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [errors, setErrors] = useState({})
     const validatorConfig = {
         email: {
@@ -32,6 +35,9 @@ const LoginForm = () => {
     function handleSubmit(event) {
         event.preventDefault()
         console.log(data)
+        const isValid = validate()
+        if (!isValid) return
+        dispatch(login(data))
         navigate("/")
     }
     useEffect(() => {

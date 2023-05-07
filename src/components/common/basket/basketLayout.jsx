@@ -5,82 +5,139 @@ import {
     getGoodName,
     getGoodPrice
 } from "../../../utils/goodInBasket"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import PropTypes from "prop-types"
+import { updateBasket } from "../../../store/basket"
 
 const BasketLayout = ({ userBasket, arrayOfGoods }) => {
-    const [currentBasket, setCurrentBasket] = useState(userBasket)
+    const [currentBasket, setCurrentBasket] = useState({
+        ...userBasket
+    })
     const [totalCost, setTotalCost] = useState(0)
     const [allMark, setAllMark] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     useEffect(() => {
         totalCostCalculating(currentBasket)
     }, [])
     function totalCostCalculating(basket) {
         let basketCost = 0
-        basket.forEach((elem) => {
-            basketCost +=
-                getGoodPrice(elem.goodId, arrayOfGoods) * elem.goodQuantity
+        Object.values(basket.goods).forEach((elem) => {
+            basketCost += getGoodPrice(elem.goodId, arrayOfGoods) * elem.goodQuantity
         })
         setTotalCost(basketCost)
     }
     function handleIncrement(target) {
-        const chosenGood = currentBasket.findIndex(
-            (elem) => elem.goodId === target.target.id
-        )
-        currentBasket[chosenGood].goodQuantity += 1
-        const tempBasket = [...currentBasket]
+        const id = target.target.id
+        const temp = { ...currentBasket.goods[id] }
+        temp.goodQuantity += 1
+        const tempBasket = {
+            ...currentBasket,
+            goods: {
+                ...currentBasket.goods,
+                [id]: temp
+            }
+        }
+        dispatch(updateBasket(tempBasket))
         setCurrentBasket(tempBasket)
-        totalCostCalculating(currentBasket)
+        totalCostCalculating(tempBasket)
     }
     function handleDecrement(target) {
-        let tempBasket = []
-        const chosenGood = currentBasket.findIndex(
-            (elem) => elem.goodId === target.target.id
-        )
-        if (currentBasket[chosenGood].goodQuantity > 1) {
-            currentBasket[chosenGood].goodQuantity -= 1
-            tempBasket = [...currentBasket]
+        const id = target.target.id
+        let tempBasket = {}
+        if (currentBasket.goods[id].goodQuantity > 1) {
+            const temp = { ...currentBasket.goods[id] }
+            temp.goodQuantity -= 1
+            tempBasket = {
+                ...currentBasket,
+                goods: {
+                    ...currentBasket.goods,
+                    [id]: temp
+                }
+            }
         } else {
-            tempBasket = currentBasket.filter(
-                (elem) => elem.goodId !== currentBasket[chosenGood].goodId
-            )
+            const temp = { ...currentBasket.goods }
+            delete temp[id]
+            tempBasket = {
+                ...currentBasket,
+                goods: temp
+            }
         }
+        dispatch(updateBasket(tempBasket))
         setCurrentBasket(tempBasket)
         totalCostCalculating(tempBasket)
     }
     function handleDelete(target) {
-        const tempBasket = currentBasket.filter(
-            (elem) => elem.goodId !== target.target.id
-        )
+        const id = target.target.id
+        const temp = { ...currentBasket.goods }
+        delete temp[id]
+        const tempBasket = {
+            ...currentBasket,
+            goods: temp
+        }
+        dispatch(updateBasket(tempBasket))
         setCurrentBasket(tempBasket)
         totalCostCalculating(tempBasket)
     }
     function handleDeleteChosen() {
-        const tempBasket = currentBasket.filter((elem) => elem.chosen !== true)
+        const temp = { ...currentBasket.goods }
+        for (const good of Object.keys(temp)) {
+            if (temp[good].chosen) {
+                delete temp[good]
+            }
+        }
+        const tempBasket = {
+            ...currentBasket,
+            goods: temp
+        }
+        dispatch(updateBasket(tempBasket))
         setCurrentBasket(tempBasket)
         totalCostCalculating(tempBasket)
     }
     function handleGoodMark({ name, newValue }) {
-        const chosenGood = currentBasket.findIndex(
-            (elem) => elem.goodId === name
-        )
-        const temp = [...currentBasket]
-        temp[chosenGood].chosen = newValue
-        setCurrentBasket(temp)
+        const temp = { ...currentBasket.goods[name] }
+        temp.chosen = newValue
+        const tempBasket = {
+            ...currentBasket,
+            goods: {
+                ...currentBasket.goods,
+                [name]: temp
+            }
+        }
+        setCurrentBasket(tempBasket)
+        dispatch(updateBasket(tempBasket))
     }
     function handleMarkAll({ newValue }) {
-        console.log(newValue)
         setAllMark(newValue)
-        const temp = currentBasket.map((elem) => {
-            elem.chosen = newValue
-            return elem
-        })
-        setCurrentBasket(temp)
+        let tempBasket = { ...currentBasket }
+        for (const good of Object.values(currentBasket.goods)) {
+            const temp = { ...good }
+            temp.chosen = newValue
+            tempBasket = {
+                ...tempBasket,
+                goods: {
+                    ...tempBasket.goods,
+                    [good.goodId]: temp
+                }
+            }
+        }
+        setCurrentBasket(tempBasket)
+        dispatch(updateBasket(tempBasket))
     }
     function handleGoToCheckout() {
-        console.log(currentBasket)
-        navigate("/checkout")
+        let readyToOrder = false
+        for (const good of Object.values(currentBasket.goods)) {
+            if (good.chosen === true) {
+                readyToOrder = true
+                break
+            }
+        }
+        if (readyToOrder) {
+            navigate("/checkout")
+        } else {
+            alert("Вам нужно выбрать хотя бы один товар")
+        }
     }
     return (
         <>
@@ -119,7 +176,7 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
                 </div>
             </nav>
             <nav className="navbar navbar-light bg-light m-5">
-                {currentBasket.map((item) => (
+                {Object.values(currentBasket.goods).map((item) => (
                     <div className="container" key={item.goodId}>
                         <div>
                             <CheckBoxField
@@ -177,7 +234,7 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
     )
 }
 BasketLayout.propTypes = {
-    userBasket: PropTypes.array,
+    userBasket: PropTypes.object,
     arrayOfGoods: PropTypes.array
 }
 

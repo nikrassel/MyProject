@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom"
 import TextField from "../common/form/textField"
 import CheckBoxField from "../common/form/checkBoxField"
 import { validator } from "../../utils/validator"
+import { signUp } from "../../store/user"
+import { useDispatch } from "react-redux"
 
 // Добавить валидацию для данных
 const RegisterForm = () => {
@@ -12,6 +14,7 @@ const RegisterForm = () => {
         name: "",
         licence: false
     })
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const [errors, setErrors] = useState({})
     const validatorConfig = {
@@ -63,6 +66,9 @@ const RegisterForm = () => {
     function handleSubmit(event) {
         event.preventDefault()
         console.log(data)
+        const isValid = validate()
+        if (!isValid) return
+        dispatch(signUp(data))
         navigate("/")
     }
     useEffect(() => {

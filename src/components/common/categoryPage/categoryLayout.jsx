@@ -2,12 +2,18 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { useNavigate } from "react-router-dom"
 import FiltersAppendix from "./filtersAppendix"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { getGoodsByCategory } from "../../../store/goods"
+import { updateBasket } from "../../../store/basket"
+import { goodCheck } from "../../../utils/goodInBasket"
 
-const CategoryLayout = ({ currentCategory }) => {
+const CategoryLayout = ({ currentCategory, userBasket }) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [maxPrice, setMaxPrice] = useState(200)
+    const [basket, setBasket] = useState({
+        ...userBasket
+    })
     function handleChange(value) {
         setMaxPrice(value)
     }
@@ -15,6 +21,64 @@ const CategoryLayout = ({ currentCategory }) => {
     function handleClick(target) {
         const endPoint = target.target.id
         navigate(`/catalog/${currentCategory}/${endPoint}`)
+    }
+    function handleBuy(target) {
+        const id = target.target.id
+        const newGood = goodCheck(id, basket)
+        const goods = {
+            ...basket.goods,
+            ...newGood
+        }
+        const temp = {
+            ...basket,
+            goods
+        }
+        setBasket(temp)
+        dispatch(updateBasket({
+            ...temp
+        }))
+    }
+    function handleIncrement(target) {
+        const id = target.target.id
+        const temp = { ...basket.goods[id] }
+        temp.goodQuantity += 1
+        const tempBasket = {
+            ...basket,
+            goods: {
+                ...basket.goods,
+                [id]: temp
+            }
+        }
+        setBasket(tempBasket)
+        dispatch(updateBasket({
+            ...tempBasket
+        }))
+    }
+    function handleDecrement(target) {
+        const id = target.target.id
+        let tempBasket = {}
+        if (basket.goods[id].goodQuantity > 1) {
+            const temp = { ...basket.goods[id] }
+            temp.goodQuantity -= 1
+            tempBasket = {
+                ...basket,
+                goods: {
+                    ...basket.goods,
+                    [id]: temp
+                }
+            }
+        } else {
+            const temp = { ...basket.goods }
+            delete temp[id]
+            tempBasket = {
+                ...basket,
+                goods: temp
+            }
+        }
+        setBasket(tempBasket)
+        dispatch(updateBasket({
+            ...tempBasket
+        }))
     }
     const filtredLayout = currentLayout.filter((elem) => elem.price <= maxPrice)
     return (
@@ -39,9 +103,24 @@ const CategoryLayout = ({ currentCategory }) => {
                                 <p className="card-text">
                                     {item.shortDescription}
                                 </p>
-                                <a href="" className="btn btn-warning">
-                                    Купить
-                                </a>
+                                {basket.goods && Object.keys(basket.goods).includes(item.id)
+                                    ? (
+                                        <div>
+                                            <button id={item.id} className="btn btn-warning" onClick={handleDecrement}>
+                                                -
+                                            </button>
+                                            <span className="badge bg-warning text-dark p-3 m-2">{basket.goods[item.id].goodQuantity}</span>
+                                            <button id={item.id} className="btn btn-warning" onClick={handleIncrement}>
+                                                +
+                                            </button>
+                                        </div>
+                                    )
+                                    : (
+                                        <button id={item.id} className="btn btn-warning" onClick={handleBuy}>
+                                            Купить
+                                        </button>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
@@ -52,7 +131,8 @@ const CategoryLayout = ({ currentCategory }) => {
 }
 
 CategoryLayout.propTypes = {
-    currentCategory: PropTypes.string
+    currentCategory: PropTypes.string,
+    userBasket: PropTypes.object
 }
 
 export default CategoryLayout

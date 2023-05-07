@@ -1,16 +1,81 @@
-import React from "react"
+import React, { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { getGoodById, getRecommendation } from "../../../store/goods"
+import PropTypes from "prop-types"
+import { goodCheck } from "../../../utils/goodInBasket"
+import { updateBasket } from "../../../store/basket"
 
-const GoodLayout = () => {
+const GoodLayout = ({ userBasket }) => {
     const { good } = useParams()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [basket, setBasket] = useState({
+        ...userBasket
+    })
     const currentGood = useSelector(getGoodById(good))
     const recommendation = useSelector(getRecommendation(good))
     function handleReccomendation(target) {
         const endPoint = target.target.id
         navigate(`/catalog/${recommendation.category}/${endPoint}`)
+    }
+    function handleBuy(target) {
+        const id = target.target.id
+        const newGood = goodCheck(id, basket)
+        const goods = {
+            ...basket.goods,
+            ...newGood
+        }
+        const temp = {
+            ...basket,
+            goods
+        }
+        setBasket(temp)
+        dispatch(updateBasket({
+            ...temp
+        }))
+    }
+    function handleIncrement(target) {
+        const id = target.target.id
+        const temp = { ...basket.goods[id] }
+        temp.goodQuantity += 1
+        const tempBasket = {
+            ...basket,
+            goods: {
+                ...basket.goods,
+                [id]: temp
+            }
+        }
+        setBasket(tempBasket)
+        dispatch(updateBasket({
+            ...tempBasket
+        }))
+    }
+    function handleDecrement(target) {
+        const id = target.target.id
+        let tempBasket = {}
+        if (basket.goods[id].goodQuantity > 1) {
+            const temp = { ...basket.goods[id] }
+            temp.goodQuantity -= 1
+            tempBasket = {
+                ...basket,
+                goods: {
+                    ...basket.goods,
+                    [id]: temp
+                }
+            }
+        } else {
+            const temp = { ...basket.goods }
+            delete temp[id]
+            tempBasket = {
+                ...basket,
+                goods: temp
+            }
+        }
+        setBasket(tempBasket)
+        dispatch(updateBasket({
+            ...tempBasket
+        }))
     }
     if (currentGood) {
         return (
@@ -28,9 +93,24 @@ const GoodLayout = () => {
                                 </span>
                                 <span>Вы получите х бонусов</span>
                             </div>
-                            <button className="btn btn-warning mb-2">
-                                Купить
-                            </button>
+                            {basket.goods && Object.keys(basket.goods).includes(currentGood.id)
+                                ? (
+                                    <div>
+                                        <button id={currentGood.id} className="btn btn-warning" onClick={handleDecrement}>
+                                            -
+                                        </button>
+                                        <span className="badge bg-warning text-dark p-3 m-2">{basket.goods[currentGood.id].goodQuantity}</span>
+                                        <button id={currentGood.id} className="btn btn-warning" onClick={handleIncrement}>
+                                            +
+                                        </button>
+                                    </div>
+                                )
+                                : (
+                                    <button id={currentGood.id} className="btn btn-warning" onClick={handleBuy}>
+                                        Купить
+                                    </button>
+                                )
+                            }
                             <br />
                             <button className="btn btn-info">
                                 В избранное
@@ -75,6 +155,10 @@ const GoodLayout = () => {
             </>
         )
     }
+}
+
+GoodLayout.propTypes = {
+    userBasket: PropTypes.object
 }
 
 export default GoodLayout

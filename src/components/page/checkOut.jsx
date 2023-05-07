@@ -1,13 +1,16 @@
 import React, { useState } from "react"
 import { getGoodImage, getGoodName } from "../../utils/goodInBasket"
 import RadioField from "../common/form/radioField"
-import { useSelector } from "react-redux"
-import { getBasket } from "../../store/basket"
+import { useSelector, useDispatch } from "react-redux"
+import { getChosenGoods, removeChosenGoods } from "../../store/basket"
 import { getGoods } from "../../store/goods"
+import { nanoid } from "nanoid"
+import { createOrder } from "../../store/orders"
 
 const CheckOut = () => {
-    const basket = useSelector(getBasket())
+    const basket = useSelector(getChosenGoods())
     const arrayOfGoods = useSelector(getGoods())
+    const dispatch = useDispatch()
     const [data, setData] = useState({
         payMethod: "Картой онлайн",
         delivery: "Самовывоз",
@@ -20,6 +23,24 @@ const CheckOut = () => {
         }))
     }
     function handleFinish() {
+        dispatch(removeChosenGoods())
+        const ids = []
+        const quantities = {}
+        for (const id of Object.values(basket)) {
+            ids.push(id.goodId)
+            quantities[id.goodId] = id.goodQuantity
+        }
+        const newOrder = {
+            goodsIds: ids,
+            goodQuantity: quantities,
+            payMethod: data.payMethod,
+            delivery: data.delivery,
+            date: Date.now(),
+            status: "Принят к сборке",
+            orderNumber: nanoid()
+        }
+        console.log(newOrder)
+        dispatch(createOrder(newOrder))
         setData((prevState) => ({
             ...prevState,
             isReady: true
@@ -57,7 +78,7 @@ const CheckOut = () => {
                                         />
                                     </div>
                                 </div>
-                                {basket.map((item) => (
+                                {Object.values(basket).map((item) => (
                                     <div
                                         className="container"
                                         key={item.goodId}

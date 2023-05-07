@@ -29,7 +29,7 @@ const UserOrders = () => {
                 <LowerNavBar />
                 {currentOrder ? (
                     <>
-                        <h2>Номер заказ: {currentOrder.orderNumber}</h2>
+                        <h2>Идентификатор заказа: {currentOrder.orderNumber}</h2>
                         <h3>
                             Дата размещения: {dateFormater(currentOrder.date)}
                         </h3>
@@ -114,7 +114,7 @@ const UserOrders = () => {
                                         id={item.orderNumber}
                                         onClick={handleChoseOrder}
                                     >
-                                        Номер заказ: {item.orderNumber}
+                                        Идентификатор заказа: {item.orderNumber}
                                     </a>
                                     <a>
                                         {" "}
