@@ -1,39 +1,30 @@
 import React from "react"
-import MiddleNavBar from "../ui/middleNavBar"
-import LowerNavBar from "../ui/lowerNavBar"
 import { useSelector } from "react-redux"
 import { getBasket } from "../../store/basket"
 import BasketLayout from "../common/basket/basketLayout"
 import { getGoods } from "../../store/goods"
+import { getFavorites } from "../../store/favorites"
 
 const UserBasket = () => {
     const userBasket = useSelector(getBasket())
     const arrayOfGoods = useSelector(getGoods())
-    if (userBasket && arrayOfGoods) {
-        // const changedBasket = []
-        // for (const good of userBasket) {
-        //     const nextGood = {
-        //         ...good
-        //     }
-        //     changedBasket.push(nextGood)
-        // }
+    const userFavorites = useSelector(getFavorites())
+    if (userBasket && arrayOfGoods && userFavorites) {
         return (
             <>
-                <MiddleNavBar />
-                <LowerNavBar />
-                {userBasket.goods
-                    ? (
-                        <BasketLayout
-                            userBasket={userBasket}
-                            arrayOfGoods={arrayOfGoods}
-                        />
-                    )
-                    : (<h2>В вашей корзине ничего нет</h2>)
-                }
+                {userBasket.goods ? (
+                    <BasketLayout
+                        userBasket={userBasket}
+                        arrayOfGoods={arrayOfGoods}
+                        userFavorites={userFavorites}
+                    />
+                ) : (
+                    <h2>В вашей корзине ничего нет</h2>
+                )}
             </>
         )
     }
-    return <h2>Loading...</h2>
+    return <h2>Для просмотра корзины вам необходимо авторизироваться</h2>
 }
 
 export default UserBasket

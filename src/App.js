@@ -12,12 +12,16 @@ import UserOrders from "./components/page/userOrders"
 import SearchResult from "./components/page/searchResult"
 import UserCabinet from "./components/page/userCabinet"
 import AppLoader from "./components/ui/hoc/appLoader"
+import MiddleNavBar from "./components/ui/middleNavBar"
+import LowerNavBar from "./components/ui/lowerNavBar"
 
 function App() {
     return (
         <>
             <AppLoader>
                 <UpperNavBar />
+                <MiddleNavBar />
+                <LowerNavBar />
                 <Routes>
                     <Route path="/" Component={Main} />
                     <Route

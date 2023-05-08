@@ -7,7 +7,7 @@ import { getGoodsByCategory } from "../../../store/goods"
 import { updateBasket } from "../../../store/basket"
 import { goodCheck } from "../../../utils/goodInBasket"
 
-const CategoryLayout = ({ currentCategory, userBasket }) => {
+const CategoryLayout = ({ currentCategory, userBasket, isLoggedIn }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [maxPrice, setMaxPrice] = useState(200)
@@ -22,7 +22,13 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
         const endPoint = target.target.id
         navigate(`/catalog/${currentCategory}/${endPoint}`)
     }
+    function checkLoggedIn() {
+        if (!isLoggedIn) {
+            navigate("/login")
+        }
+    }
     function handleBuy(target) {
+        checkLoggedIn()
         const id = target.target.id
         const newGood = goodCheck(id, basket)
         const goods = {
@@ -34,9 +40,11 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
             goods
         }
         setBasket(temp)
-        dispatch(updateBasket({
-            ...temp
-        }))
+        dispatch(
+            updateBasket({
+                ...temp
+            })
+        )
     }
     function handleIncrement(target) {
         const id = target.target.id
@@ -50,9 +58,11 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
             }
         }
         setBasket(tempBasket)
-        dispatch(updateBasket({
-            ...tempBasket
-        }))
+        dispatch(
+            updateBasket({
+                ...tempBasket
+            })
+        )
     }
     function handleDecrement(target) {
         const id = target.target.id
@@ -76,9 +86,11 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
             }
         }
         setBasket(tempBasket)
-        dispatch(updateBasket({
-            ...tempBasket
-        }))
+        dispatch(
+            updateBasket({
+                ...tempBasket
+            })
+        )
     }
     const filtredLayout = currentLayout.filter((elem) => elem.price <= maxPrice)
     return (
@@ -103,24 +115,36 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
                                 <p className="card-text">
                                     {item.shortDescription}
                                 </p>
-                                {basket.goods && Object.keys(basket.goods).includes(item.id)
-                                    ? (
+                                {basket.goods &&
+                                Object.keys(basket.goods).includes(item.id) ? (
                                         <div>
-                                            <button id={item.id} className="btn btn-warning" onClick={handleDecrement}>
+                                            <button
+                                                id={item.id}
+                                                className="btn btn-warning"
+                                                onClick={handleDecrement}
+                                            >
                                                 -
                                             </button>
-                                            <span className="badge bg-warning text-dark p-3 m-2">{basket.goods[item.id].goodQuantity}</span>
-                                            <button id={item.id} className="btn btn-warning" onClick={handleIncrement}>
+                                            <span className="badge bg-warning text-dark p-3 m-2">
+                                                {basket.goods[item.id].goodQuantity}
+                                            </span>
+                                            <button
+                                                id={item.id}
+                                                className="btn btn-warning"
+                                                onClick={handleIncrement}
+                                            >
                                                 +
                                             </button>
                                         </div>
-                                    )
-                                    : (
-                                        <button id={item.id} className="btn btn-warning" onClick={handleBuy}>
+                                    ) : (
+                                        <button
+                                            id={item.id}
+                                            className="btn btn-warning"
+                                            onClick={handleBuy}
+                                        >
                                             Купить
                                         </button>
-                                    )
-                                }
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -132,7 +156,8 @@ const CategoryLayout = ({ currentCategory, userBasket }) => {
 
 CategoryLayout.propTypes = {
     currentCategory: PropTypes.string,
-    userBasket: PropTypes.object
+    userBasket: PropTypes.object,
+    isLoggedIn: PropTypes.bool
 }
 
 export default CategoryLayout

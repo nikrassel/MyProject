@@ -1,12 +1,19 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { mainCategories } from "../../utils/temporaryDataBase"
+import { getIsLoggedIn } from "../../store/user"
+import { useSelector } from "react-redux"
 
 const LowerNavBar = () => {
+    const isLoggedIn = useSelector(getIsLoggedIn())
     const navigate = useNavigate()
     function handleClick(target) {
         const endPoint = target.target.id
         navigate(`/catalog/${endPoint}`)
+    }
+    function handleToPersonal(target) {
+        const endPoint = target.target.id
+        navigate(`/${endPoint}`)
     }
     return (
         <>
@@ -40,15 +47,31 @@ const LowerNavBar = () => {
                             ))}
                         </ul>
                     </div>
-                    <a className="navbar-brand" href="#">
+                    <button type="button" className="btn btn-warning">
                         Товары месяца
-                    </a>
-                    <a className="navbar-brand" href="#">
+                    </button>
+                    <button type="button" className="btn btn-warning">
                         Большие скидки
-                    </a>
-                    <a className="navbar-brand" href="#">
-                        Предзаказы
-                    </a>
+                    </button>
+                    {isLoggedIn ? (
+                        <button
+                            type="button"
+                            className="btn btn-warning"
+                            id="cabinet"
+                            onClick={handleToPersonal}
+                        >
+                            Ваш Кабинет
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="btn btn-warning"
+                            id="login"
+                            onClick={handleToPersonal}
+                        >
+                            Войти
+                        </button>
+                    )}
                 </div>
             </nav>
         </>

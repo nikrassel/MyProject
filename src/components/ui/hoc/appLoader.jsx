@@ -5,8 +5,8 @@ import PropTypes from "prop-types"
 import { loadUserBasket } from "../../../store/basket"
 import { loadCategoriesList } from "../../../store/categories"
 import { getIsLoggedIn, loadUserInfo } from "../../../store/user"
-import { getUserId } from "../../../services/localStorage.service"
 import { loadUserOrders } from "../../../store/orders"
+import { loadUserFavorites } from "../../../store/favorites"
 
 const AppLoader = ({ children }) => {
     const dispatch = useDispatch()
@@ -15,10 +15,10 @@ const AppLoader = ({ children }) => {
     dispatch(loadCategoriesList())
     useEffect(() => {
         if (isLoggedIn) {
-            const userId = getUserId()
-            dispatch(loadUserBasket(userId))
+            dispatch(loadUserBasket())
             dispatch(loadUserInfo())
             dispatch(loadUserOrders())
+            dispatch(loadUserFavorites())
         }
     }, [isLoggedIn])
     return children

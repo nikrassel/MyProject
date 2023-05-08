@@ -5,6 +5,7 @@ import { createAction, createSlice } from "@reduxjs/toolkit"
 import { createBasket, closeBasket } from "./basket"
 import { generateAuthError } from "../utils/generateAuthError"
 import { refreshOrders } from "./orders"
+import { createFavorites, refreshFavorites } from "./favorites"
 
 const initialState = localStorageService.getAccesToken()
     ? {
@@ -62,8 +63,15 @@ const usersSlice = createSlice({
 })
 
 const { reducer: userReducer, actions } = usersSlice
-const { authRequestSuccess, userCreated, authRequestFailed, userLoggedOut, userInfoRequested, userInfoReceved, userInfoRequestFailed } =
-    actions
+const {
+    authRequestSuccess,
+    userCreated,
+    authRequestFailed,
+    userLoggedOut,
+    userInfoRequested,
+    userInfoReceved,
+    userInfoRequestFailed
+} = actions
 const authRequested = createAction("users/authRequested")
 const userCreateRequested = createAction("users/userCreateRequested")
 const createUserFailed = createAction("users/createUserFailed")
@@ -105,6 +113,12 @@ export const signUp =
                         goods: []
                     })
                 )
+                dispatch(
+                    createFavorites({
+                        userId: data.localId,
+                        goods: []
+                    })
+                )
             } catch (error) {
                 dispatch(authRequestFailed(error.message))
             }
@@ -131,6 +145,7 @@ export const logOut = () => (dispatch) => {
     dispatch(userLoggedOut())
     dispatch(closeBasket())
     dispatch(refreshOrders())
+    dispatch(refreshFavorites())
 }
 export const loadUserInfo = () => async (dispatch) => {
     dispatch(userInfoRequested())

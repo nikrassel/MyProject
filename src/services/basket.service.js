@@ -8,8 +8,10 @@ const basketService = {
         const { data } = await httpService.get(basketEndpoint)
         return data
     },
-    getUserBasket: async (payload) => {
-        const { data } = await httpService.get(basketEndpoint + payload)
+    getUserBasket: async () => {
+        const { data } = await httpService.get(
+            basketEndpoint + localStorageService.getUserId()
+        )
         return data
     },
     create: async (payload) => {

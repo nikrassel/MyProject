@@ -5,13 +5,17 @@ import { getGoodById, getRecommendation } from "../../../store/goods"
 import PropTypes from "prop-types"
 import { goodCheck } from "../../../utils/goodInBasket"
 import { updateBasket } from "../../../store/basket"
+import { updateFavorites } from "../../../store/favorites"
 
-const GoodLayout = ({ userBasket }) => {
+const GoodLayout = ({ userBasket, userFavorites, isLoggedIn }) => {
     const { good } = useParams()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [basket, setBasket] = useState({
         ...userBasket
+    })
+    const [favorites, setFavorites] = useState({
+        ...userFavorites
     })
     const currentGood = useSelector(getGoodById(good))
     const recommendation = useSelector(getRecommendation(good))
@@ -19,7 +23,13 @@ const GoodLayout = ({ userBasket }) => {
         const endPoint = target.target.id
         navigate(`/catalog/${recommendation.category}/${endPoint}`)
     }
+    function checkLoggedIn() {
+        if (!isLoggedIn) {
+            navigate("/login")
+        }
+    }
     function handleBuy(target) {
+        checkLoggedIn()
         const id = target.target.id
         const newGood = goodCheck(id, basket)
         const goods = {
@@ -31,9 +41,11 @@ const GoodLayout = ({ userBasket }) => {
             goods
         }
         setBasket(temp)
-        dispatch(updateBasket({
-            ...temp
-        }))
+        dispatch(
+            updateBasket({
+                ...temp
+            })
+        )
     }
     function handleIncrement(target) {
         const id = target.target.id
@@ -47,9 +59,11 @@ const GoodLayout = ({ userBasket }) => {
             }
         }
         setBasket(tempBasket)
-        dispatch(updateBasket({
-            ...tempBasket
-        }))
+        dispatch(
+            updateBasket({
+                ...tempBasket
+            })
+        )
     }
     function handleDecrement(target) {
         const id = target.target.id
@@ -73,9 +87,20 @@ const GoodLayout = ({ userBasket }) => {
             }
         }
         setBasket(tempBasket)
-        dispatch(updateBasket({
-            ...tempBasket
-        }))
+        dispatch(
+            updateBasket({
+                ...tempBasket
+            })
+        )
+    }
+    function handleAddToFavorites() {
+        checkLoggedIn()
+        const temp = {
+            ...favorites,
+            [currentGood.id]: currentGood.id
+        }
+        setFavorites(temp)
+        dispatch(updateFavorites(temp))
     }
     if (currentGood) {
         return (
@@ -93,28 +118,54 @@ const GoodLayout = ({ userBasket }) => {
                                 </span>
                                 <span>Вы получите х бонусов</span>
                             </div>
-                            {basket.goods && Object.keys(basket.goods).includes(currentGood.id)
-                                ? (
+                            {basket.goods &&
+                            Object.keys(basket.goods).includes(
+                                currentGood.id
+                            ) ? (
                                     <div>
-                                        <button id={currentGood.id} className="btn btn-warning" onClick={handleDecrement}>
+                                        <button
+                                            id={currentGood.id}
+                                            className="btn btn-warning"
+                                            onClick={handleDecrement}
+                                        >
                                             -
                                         </button>
-                                        <span className="badge bg-warning text-dark p-3 m-2">{basket.goods[currentGood.id].goodQuantity}</span>
-                                        <button id={currentGood.id} className="btn btn-warning" onClick={handleIncrement}>
+                                        <span className="badge bg-warning text-dark p-3 m-2">
+                                            {
+                                                basket.goods[currentGood.id]
+                                                    .goodQuantity
+                                            }
+                                        </span>
+                                        <button
+                                            id={currentGood.id}
+                                            className="btn btn-warning"
+                                            onClick={handleIncrement}
+                                        >
                                             +
                                         </button>
                                     </div>
-                                )
-                                : (
-                                    <button id={currentGood.id} className="btn btn-warning" onClick={handleBuy}>
+                                ) : (
+                                    <button
+                                        id={currentGood.id}
+                                        className="btn btn-warning"
+                                        onClick={handleBuy}
+                                    >
                                         Купить
                                     </button>
-                                )
-                            }
+                                )}
                             <br />
-                            <button className="btn btn-info">
-                                В избранное
-                            </button>
+                            {Object.keys(favorites).includes(currentGood.id) ? (
+                                <span className="badge bg-info text-dark p-3 m-2">
+                                    Уже в избранном
+                                </span>
+                            ) : (
+                                <button
+                                    className="btn btn-info"
+                                    onClick={handleAddToFavorites}
+                                >
+                                    В избранное
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -158,7 +209,9 @@ const GoodLayout = ({ userBasket }) => {
 }
 
 GoodLayout.propTypes = {
-    userBasket: PropTypes.object
+    userBasket: PropTypes.object,
+    userFavorites: PropTypes.object,
+    isLoggedIn: PropTypes.bool
 }
 
 export default GoodLayout

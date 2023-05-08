@@ -39,8 +39,14 @@ const basketSlice = createSlice({
 })
 
 const { reducer: basketReducer, actions } = basketSlice
-const { basketRequested, basketReceved, basketRequestFailed, basketCreated, hideBasket, basketUpdate } =
-    actions
+const {
+    basketRequested,
+    basketReceved,
+    basketRequestFailed,
+    basketCreated,
+    hideBasket,
+    basketUpdate
+} = actions
 const basketCreateRequested = createAction("basket/createRequested")
 const createBasketFailed = createAction("basket/createFailed")
 const basketUpdateRequested = createAction("basket/updateRequested")
@@ -57,12 +63,12 @@ export const loadBasket = () => async (dispatch, getState) => {
         }
     }
 }
-export const loadUserBasket = (payload) => async (dispatch, getState) => {
+export const loadUserBasket = () => async (dispatch, getState) => {
     const { lastFetch } = getState().basket
     if (isOutdated(lastFetch)) {
         dispatch(basketRequested())
         try {
-            const { content } = await basketService.getUserBasket(payload)
+            const { content } = await basketService.getUserBasket()
             dispatch(basketReceved(content))
         } catch (error) {
             dispatch(basketRequestFailed(error.message))

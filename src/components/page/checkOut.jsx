@@ -6,11 +6,13 @@ import { getChosenGoods, removeChosenGoods } from "../../store/basket"
 import { getGoods } from "../../store/goods"
 import { nanoid } from "nanoid"
 import { createOrder } from "../../store/orders"
+import { useNavigate } from "react-router-dom"
 
 const CheckOut = () => {
     const basket = useSelector(getChosenGoods())
     const arrayOfGoods = useSelector(getGoods())
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [data, setData] = useState({
         payMethod: "Картой онлайн",
         delivery: "Самовывоз",
@@ -45,6 +47,8 @@ const CheckOut = () => {
             ...prevState,
             isReady: true
         }))
+        alert("Спасибо за ваш заказ")
+        navigate("/")
     }
     if (basket && arrayOfGoods) {
         return (

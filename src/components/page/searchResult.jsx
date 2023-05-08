@@ -1,7 +1,5 @@
 import React from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import MiddleNavBar from "../ui/middleNavBar"
-import LowerNavBar from "../ui/lowerNavBar"
 import { getGoodWithSearch } from "../../store/goods"
 import { useSelector } from "react-redux"
 
@@ -15,8 +13,6 @@ const SearchResult = () => {
     }
     return (
         <>
-            <MiddleNavBar />
-            <LowerNavBar />
             {searchResults ? (
                 <>
                     <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3 text-center"></div>

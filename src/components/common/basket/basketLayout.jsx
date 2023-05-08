@@ -9,10 +9,14 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import PropTypes from "prop-types"
 import { updateBasket } from "../../../store/basket"
+import { updateFavorites } from "../../../store/favorites"
 
-const BasketLayout = ({ userBasket, arrayOfGoods }) => {
+const BasketLayout = ({ userBasket, arrayOfGoods, userFavorites }) => {
     const [currentBasket, setCurrentBasket] = useState({
         ...userBasket
+    })
+    const [favorites, setFavorites] = useState({
+        ...userFavorites
     })
     const [totalCost, setTotalCost] = useState(0)
     const [allMark, setAllMark] = useState(false)
@@ -24,7 +28,8 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
     function totalCostCalculating(basket) {
         let basketCost = 0
         Object.values(basket.goods).forEach((elem) => {
-            basketCost += getGoodPrice(elem.goodId, arrayOfGoods) * elem.goodQuantity
+            basketCost +=
+                getGoodPrice(elem.goodId, arrayOfGoods) * elem.goodQuantity
         })
         setTotalCost(basketCost)
     }
@@ -125,6 +130,17 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
         setCurrentBasket(tempBasket)
         dispatch(updateBasket(tempBasket))
     }
+    function handleAddToFavorites(target) {
+        console.log(target.target)
+        const id = target.target.id
+        console.log(id)
+        const temp = {
+            ...favorites,
+            [id]: id
+        }
+        setFavorites(temp)
+        dispatch(updateFavorites(temp))
+    }
     function handleGoToCheckout() {
         let readyToOrder = false
         for (const good of Object.values(currentBasket.goods)) {
@@ -193,9 +209,19 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
                         </div>
                         <div className="col">
                             <h3>{getGoodName(item.goodId, arrayOfGoods)}</h3>
-                            <button className="btn btn-info b-2">
-                                В избранное
-                            </button>
+                            {Object.keys(favorites).includes(item.goodId) ? (
+                                <span className="badge bg-info text-dark p-3 m-2">
+                                    Уже в избранном
+                                </span>
+                            ) : (
+                                <button
+                                    id={item.goodId}
+                                    className="btn btn-info"
+                                    onClick={handleAddToFavorites}
+                                >
+                                    В избранное
+                                </button>
+                            )}
                             <button
                                 className="btn btn-danger"
                                 id={item.goodId}
@@ -235,7 +261,8 @@ const BasketLayout = ({ userBasket, arrayOfGoods }) => {
 }
 BasketLayout.propTypes = {
     userBasket: PropTypes.object,
-    arrayOfGoods: PropTypes.array
+    arrayOfGoods: PropTypes.array,
+    userFavorites: PropTypes.object
 }
 
 export default BasketLayout

@@ -36,7 +36,13 @@ const ordersSlice = createSlice({
 })
 
 const { reducer: ordersReducer, actions } = ordersSlice
-const { ordersRequested, ordersReceved, ordersRequestFailed, orderCreated, hideOrders } = actions
+const {
+    ordersRequested,
+    ordersReceved,
+    ordersRequestFailed,
+    orderCreated,
+    hideOrders
+} = actions
 const orderCreateRequested = createAction("order/createRequested")
 const createOrderFailed = createAction("order/createFailed")
 
