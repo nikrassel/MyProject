@@ -19,7 +19,7 @@ const Catalog = () => {
             <>
                 {currentCategory ? (
                     good ? (
-                        <div className="mb-4 offset-md-3">
+                        <div className="mb-4 offset-md-1">
                             <GoodLayout
                                 userBasket={userBasket}
                                 userFavorites={userFavorites}
@@ -27,7 +27,7 @@ const Catalog = () => {
                             />
                         </div>
                     ) : (
-                        <div className="mb-4 offset-md-3">
+                        <div className="mb-4 offset-md-1">
                             <h1>Страница {category}</h1>
                             <CategoryLayout
                                 currentCategory={currentCategory}

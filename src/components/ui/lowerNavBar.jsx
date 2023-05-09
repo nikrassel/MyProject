@@ -21,7 +21,7 @@ const LowerNavBar = () => {
                 <div className="container">
                     <div className="dropdown">
                         <button
-                            className="btn btn-secondary dropdown-toggle"
+                            className="btn btn-warning dropdown-toggle"
                             type="button"
                             id="catalogDropdown"
                             data-bs-toggle="dropdown"

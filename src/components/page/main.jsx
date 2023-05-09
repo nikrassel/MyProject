@@ -5,9 +5,10 @@ import MarketingPosts from "../ui/marketingPosts"
 const Main = () => {
     return (
         <>
-            <h1>Главная страница</h1>
+            <br />
             <CarouselComponent />
             <MarketingPosts />
+            <br />
         </>
     )
 }

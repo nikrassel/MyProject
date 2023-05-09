@@ -141,7 +141,7 @@ const CheckOut = () => {
                                             className="btn btn-warning"
                                             onClick={handleFinish}
                                         >
-                                            Оплатить
+                                            Оформить заказ
                                         </button>
                                     </div>
                                 </div>

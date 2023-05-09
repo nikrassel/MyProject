@@ -178,7 +178,7 @@ const BasketLayout = ({ userBasket, arrayOfGoods, userFavorites }) => {
                     </div>
                     <div className="d-flex">
                         <div>
-                            <h4>Общая стоимость: {totalCost}</h4>
+                            <h4>Общая стоимость: {totalCost} Р </h4>
                         </div>
                         <div>
                             <button
@@ -193,7 +193,7 @@ const BasketLayout = ({ userBasket, arrayOfGoods, userFavorites }) => {
             </nav>
             <nav className="navbar navbar-light bg-light m-5">
                 {Object.values(currentBasket.goods).map((item) => (
-                    <div className="container" key={item.goodId}>
+                    <div className="container mb-3" key={item.goodId}>
                         <div>
                             <CheckBoxField
                                 name={item.goodId}
@@ -201,7 +201,7 @@ const BasketLayout = ({ userBasket, arrayOfGoods, userFavorites }) => {
                                 onChange={handleGoodMark}
                             />
                         </div>
-                        <div className="col-lg-3">
+                        <div className="col-2">
                             <img
                                 src={getGoodImage(item.goodId, arrayOfGoods)}
                                 width="150 px"
@@ -209,48 +209,60 @@ const BasketLayout = ({ userBasket, arrayOfGoods, userFavorites }) => {
                         </div>
                         <div className="col">
                             <h3>{getGoodName(item.goodId, arrayOfGoods)}</h3>
-                            {Object.keys(favorites).includes(item.goodId) ? (
-                                <span className="badge bg-info text-dark p-3 m-2">
-                                    Уже в избранном
-                                </span>
-                            ) : (
-                                <button
-                                    id={item.goodId}
-                                    className="btn btn-info"
-                                    onClick={handleAddToFavorites}
-                                >
-                                    В избранное
-                                </button>
-                            )}
-                            <button
-                                className="btn btn-danger"
-                                id={item.goodId}
-                                onClick={handleDelete}
-                            >
-                                Удалить
-                            </button>
-                            <span className="badge bg-warning text-dark p-3">
-                                Количество: {item.goodQuantity}
-                            </span>
-                            <button
-                                className="btn btn-warning"
-                                id={item.goodId}
-                                onClick={handleIncrement}
-                            >
-                                +
-                            </button>
-                            <button
-                                className="btn btn-warning"
-                                id={item.goodId}
-                                onClick={handleDecrement}
-                            >
-                                -
-                            </button>
+                            <div className="row align-items-center">
+                                <div className="col-3">
+                                    {Object.keys(favorites).includes(item.goodId) ? (
+                                        <button className="btn btn-info">
+                                            Уже в избранном
+                                        </button>
+                                    ) : (
+                                        <button
+                                            id={item.goodId}
+                                            className="btn btn-info"
+                                            onClick={handleAddToFavorites}
+                                        >
+                                            В избранное
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="col">
+                                    <button
+                                        className="btn btn-danger"
+                                        id={item.goodId}
+                                        onClick={handleDelete}
+                                    >
+                                        Удалить
+                                    </button>
+                                </div>
+                                <div className="col">
+                                    <span className="badge bg-warning text-dark p-3">
+                                        Количество: {item.goodQuantity}
+                                    </span>
+                                </div>
+                                <div className="col-1">
+                                    <button
+                                        className="btn btn-warning"
+                                        id={item.goodId}
+                                        onClick={handleIncrement}
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <div className="col">
+                                    <button
+                                        className="btn btn-warning"
+                                        id={item.goodId}
+                                        onClick={handleDecrement}
+                                    >
+                                        -
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div className="col-lg-3">
                             <h2>
                                 {getGoodPrice(item.goodId, arrayOfGoods) *
-                                    item.goodQuantity}
+                                    item.goodQuantity} Р
                             </h2>
                         </div>
                     </div>

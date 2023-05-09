@@ -13,6 +13,7 @@ const CarouselComponent = () => {
                         src="img\carousel1.jpg"
                         className="d-block w-100"
                         alt="..."
+                        style={{ borderRadius: "5%" }}
                     />
                 </div>
                 <div className="carousel-item">
@@ -20,6 +21,7 @@ const CarouselComponent = () => {
                         src="img\carousel2.jpg"
                         className="d-block w-100"
                         alt="..."
+                        style={{ borderRadius: "5%" }}
                     />
                 </div>
                 <div className="carousel-item">
@@ -27,6 +29,7 @@ const CarouselComponent = () => {
                         src="img\carousel3.jpg"
                         className="d-block w-100"
                         alt="..."
+                        style={{ borderRadius: "5%" }}
                     />
                 </div>
             </div>

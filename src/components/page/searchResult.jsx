@@ -12,45 +12,54 @@ const SearchResult = () => {
         navigate(`/catalog/${endPoint}`)
     }
     return (
-        <>
+        <div className="mb-4 offset-md-1">
             {searchResults ? (
                 <>
-                    <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3 text-center"></div>
-                    {searchResults.map((item) => (
-                        <div className="col" key={item.id}>
-                            <div
-                                className="card mb-4"
-                                style={{ width: "18rem" }}
-                            >
-                                <img src={item.img} className="card-img-top" />
-                                <div className="card-body">
-                                    <h5 className="card-title">
-                                        <a
-                                            id={`${item.category}/${item.id}`}
-                                            href=""
+                    <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3 text-center">
+                        {searchResults.map((item) => (
+                            <div className="col" key={item.id}>
+                                <div
+                                    className="card text-center mb-4"
+                                    style={{ width: "18rem" }}
+                                >
+                                    <img src={item.img} className="card-img-top" type="button" onClick={handleClick} id={`${item.category}/${item.id}`}/>
+                                    <div className="card-body">
+                                        <h5 className="card-title">
+                                            <p
+                                                id={`${item.category}/${item.id}`}
+                                                onClick={handleClick}
+                                                type="button"
+                                            >
+                                                {item.name}
+                                            </p>
+                                        </h5>
+                                        <h4
+                                            className="card-title"
                                             onClick={handleClick}
-                                        >
-                                            {item.name}
+                                            id={`${item.category}/${item.id}`}
+                                            type="button">
+                                            {item.price} Р
+                                        </h4>
+                                        <p
+                                            className="card-text"
+                                            onClick={handleClick}
+                                            id={`${item.category}/${item.id}`}
+                                            type="button">
+                                            {item.shortDescription}
+                                        </p>
+                                        <a href="" className="btn btn-warning">
+                                            Купить
                                         </a>
-                                    </h5>
-                                    <h4 className="card-title">
-                                        {item.price} Р
-                                    </h4>
-                                    <p className="card-text">
-                                        {item.shortDescription}
-                                    </p>
-                                    <a href="" className="btn btn-warning">
-                                        Купить
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </>
             ) : (
                 <h2>Извините ничего не найдено</h2>
             )}
-        </>
+        </div>
     )
 }
 

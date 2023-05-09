@@ -24,7 +24,11 @@ const UserBasket = () => {
             </>
         )
     }
-    return <h2>Для просмотра корзины вам необходимо авторизироваться</h2>
+    return (
+        <div className="container-fluid mt-5 pb-5">
+            <h2>Для просмотра корзины вам необходимо авторизироваться</h2>
+        </div>
+    )
 }
 
 export default UserBasket

@@ -5,7 +5,7 @@ import dateFormater from "../../../utils/dateFormater"
 import { useDispatch } from "react-redux"
 import { updateFavorites } from "../../../store/favorites"
 
-const SingleOrder = ({ currentOrder, arrayOfGoods, userFavorites }) => {
+const SingleOrder = ({ currentOrder, arrayOfGoods, userFavorites, userInfo }) => {
     const dispatch = useDispatch()
     const [favorites, setFavorites] = useState({
         ...userFavorites
@@ -21,21 +21,17 @@ const SingleOrder = ({ currentOrder, arrayOfGoods, userFavorites }) => {
     }
     return (
         <>
-            <h2>Идентификатор заказа: {currentOrder.orderNumber}</h2>
-            <h3>Дата размещения: {dateFormater(currentOrder.date)}</h3>
-            <div className="card mb-4 offset-md-3" style={{ width: "60rem" }}>
+            <div className="container">
                 <div className="row container-fluid">
                     <div className="card" style={{ width: "20rem" }}>
-                        <p>Спобос доставки: {currentOrder.delivery}</p>
-                        <p>Инфо по доставке</p>
-                        <h5>Получатель</h5>
-                        <p>Инфо о получате</p>
+                        <p>Идентификатор заказа: {currentOrder.orderNumber}</p>
+                        <p>Дата размещения: {dateFormater(currentOrder.date)}</p>
+                        <h5>Получатель: {userInfo.name}</h5>
                     </div>
                     <div className="card" style={{ width: "20rem" }}>
-                        <h5>Оплачено</h5>
-                        <p>Товары</p>
-                        <p>Доставка</p>
-                        <p>Итого</p>
+                        <h5>Дата размещения: {dateFormater(currentOrder.date)}</h5>
+                        <p>Ожидаемая дата получения: {dateFormater(Date.now())}</p>
+                        <p>Тип оплаты: {currentOrder.payMethod}</p>
                     </div>
                     <div className="card" style={{ width: "18rem" }}>
                         <span className="badge bg-info text-dark p-3 float-end">
@@ -48,14 +44,14 @@ const SingleOrder = ({ currentOrder, arrayOfGoods, userFavorites }) => {
                 </div>
                 <div className="mt-5">
                     {currentOrder.goodsIds.map((id) => (
-                        <div className="row" key={id}>
-                            <div className="col">
+                        <div className="row align-items-center" key={id}>
+                            <div className="col-2">
                                 <img
                                     src={getGoodImage(id, arrayOfGoods)}
                                     width="150 px"
                                 />
                             </div>
-                            <div className="col">
+                            <div className="col-2">
                                 <h3>{getGoodName(id, arrayOfGoods)}</h3>
                             </div>
                             <div className="col">
@@ -84,6 +80,7 @@ const SingleOrder = ({ currentOrder, arrayOfGoods, userFavorites }) => {
 SingleOrder.propTypes = {
     arrayOfGoods: PropTypes.array,
     currentOrder: PropTypes.object,
-    userFavorites: PropTypes.object
+    userFavorites: PropTypes.object,
+    userInfo: PropTypes.object
 }
 export default SingleOrder

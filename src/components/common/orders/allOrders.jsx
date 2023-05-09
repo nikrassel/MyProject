@@ -17,7 +17,7 @@ const AllOrders = ({ orders, arrayOfGoods }) => {
             </div>
             {orders.map((item) => (
                 <div
-                    className="card mb-4 offset-md-3"
+                    className="card mb-4"
                     style={{ width: "48rem" }}
                     key={item.orderNumber}
                 >

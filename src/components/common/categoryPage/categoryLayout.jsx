@@ -99,20 +99,30 @@ const CategoryLayout = ({ currentCategory, userBasket, isLoggedIn }) => {
             <div className="row row-cols-1 row-cols-md-3 mb-3 mt-3">
                 {filtredLayout.map((item) => (
                     <div className="col" key={item.id}>
-                        <div className="card mb-4" style={{ width: "18rem" }}>
-                            <img src={item.img} className="card-img-top" />
+                        <div className="card text-center mb-4" style={{ width: "18rem" }}>
+                            <img src={item.img} className="card-img-top" type="button" onClick={handleClick} id={item.id}/>
                             <div className="card-body">
                                 <h5 className="card-title">
-                                    <a
+                                    <p
                                         id={item.id}
-                                        href=""
                                         onClick={handleClick}
+                                        type="button"
                                     >
                                         {item.name}
-                                    </a>
+                                    </p>
                                 </h5>
-                                <h4 className="card-title">{item.price} Р</h4>
-                                <p className="card-text">
+                                <h4
+                                    className="card-title"
+                                    id={item.id}
+                                    onClick={handleClick}
+                                    type="button">
+                                    {item.price} Р
+                                </h4>
+                                <p
+                                    className="card-text"
+                                    id={item.id}
+                                    onClick={handleClick}
+                                    type="button">
                                     {item.shortDescription}
                                 </p>
                                 {basket.goods &&
